@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>湛藍守護：海域垃圾數據平台</title>
+    <style>
+        /* --- 基礎設定與色彩計畫 --- */
+        :root {
+            --deep-blue: #002244;
+            --coral-orange: #FF7F50;
+            --light-bg: #F0FFFF;
+            --white: #ffffff;
+            --danger-red: #ff4d4d;
+            --warning-yellow: #ffcc00;
+            --safe-green: #33cc33;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            font-family: "微軟正黑體", sans-serif;
+            background-color: var(--light-bg);
+            color: #181717; scroll-behavior: smooth;
+        }
+
+        /* 導覽列與主視覺 (沿用之前設定，稍微調整顏色) */
+        nav { background-color: var(--deep-blue); padding: 15px 30px; position: fixed; width: 100%; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; }
+        nav a { color: var(--white); text-decoration: none; margin: 0 15px; font-weight: bold; transition: color 0.3s; }
+        nav a:hover { color: var(--coral-orange); }
+
+        .hero {
+            background-image: linear-gradient(rgba(0, 34, 68, 0.7), rgba(0, 34, 68, 0.7)), url('https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            height: 100vh; background-attachment: fixed; background-position: center; background-size: cover;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--white); text-align: center;
+        }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 10px; }
+        .hero p { font-size: 1.5rem; margin-bottom: 30px; }
+        .cta-btn { background-color: var(--coral-orange); color: var(--white); padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; }
+
+        section { padding: 80px 10%; text-align: center; }
+        section h2 { color: var(--deep-blue); font-size: 2.5rem; margin-bottom: 40px; }
+
+        /* =========================================
+           新增：衛星影像與垃圾分級系統 (Satellite Map)
+           ========================================= */
+        .map-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            height: 550px;
+            margin: 0 auto;
+            /* 這裡使用一張由上往下拍的海岸/衛星感圖片作為底圖 */
+            background-image: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        /* 左上角數據儀表板 */
+        .data-dashboard {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 34, 68, 0.85);
+            color: var(--white);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(8px);
+            text-align: left;
+            border: 1px solid rgba(255,255,255,0.2);
+            width: 250px;
+        }
+        .data-dashboard h3 { margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 10px;}
+        .legend-item { display: flex; align-items: center; margin-bottom: 10px; font-size: 0.9rem;}
+        .dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 10px; }
+        .dot.red { background-color: var(--danger-red); }
+        .dot.yellow { background-color: var(--warning-yellow); }
+        .dot.green { background-color: var(--safe-green); }
+
+        /* 地圖上的雷達閃爍熱點 (CSS Animations) */
+        .ping {
+            position: absolute;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .ping::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            animation: radar-pulse 2s infinite ease-out;
+        }
+
+        /* 設定熱點的位置與顏色 (模擬真實數據分佈) */
+        .spot-1 { width: 20px; height: 20px; background-color: var(--danger-red); top: 35%; left: 65%; }
+        .spot-1::after { border: 2px solid var(--danger-red); }
+
+        .spot-2 { width: 15px; height: 15px; background-color: var(--warning-yellow); top: 60%; left: 40%; animation-delay: 0.5s; }
+        .spot-2::after { border: 2px solid var(--warning-yellow); animation-delay: 0.5s; }
+
+        .spot-3 { width: 12px; height: 12px; background-color: var(--safe-green); top: 75%; left: 75%; animation-delay: 1s; }
+        .spot-3::after { border: 2px solid var(--safe-green); animation-delay: 1s; }
+        
+        .spot-4 { width: 18px; height: 18px; background-color: var(--danger-red); top: 20%; left: 30%; animation-delay: 1.5s; }
+        .spot-4::after { border: 2px solid var(--danger-red); animation-delay: 1.5s; }
+
+        @keyframes radar-pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(3.5); opacity: 0; }
+        }
+
+        footer { background-color: var(--deep-blue); color: var(--white); text-align: center; padding: 20px; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div style="font-size: 1.5rem; font-weight: bold;">湛藍守護</div>
+        <div>
+            <a href="#home">首頁</a>
+            <a href="#map-section">衛星監測平台</a>
+        </div>
+    </nav>
+
+    <header class="hero" id="home">
+        <h1>海域垃圾數據視覺化</h1>
+        <p>結合衛星影像與數據分級，追蹤 SDG 14 執行成效</p>
+        <a href="#map-section" class="cta-btn">啟動衛星監測</a>
+    </header>
+
+    <section id="map-section">
+        <h2>即時海域廢棄物監測圖</h2>
+        <p style="margin-bottom: 40px;">透過統整政府與開源觀測資料，我們將海域垃圾密度劃分為三個警戒等級，並標示於衛星影像上。</p>
+        
+        <div class="map-wrapper">
+            <div class="data-dashboard">
+                <h3>廢棄物污染分級系統</h3>
+                <div class="legend-item">
+                    <div class="dot red"></div>
+                    <div>
+                        <strong>Level 3：重度污染</strong><br>
+                        <span style="font-size: 0.8rem; color: #ccc;">需立即展開淨灘與打撈行動</span>
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <div class="dot yellow"></div>
+                    <div>
+                        <strong>Level 2：中度警戒</strong><br>
+                        <span style="font-size: 0.8rem; color: #ccc;">垃圾密度上升，持續觀測中</span>
+                    </div>
+                </div>
+                <div class="legend-item">
+                    <div class="dot green"></div>
+                    <div>
+                        <strong>Level 1：低度風險</strong><br>
+                        <span style="font-size: 0.8rem; color: #ccc;">生態系統維持正常運作</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ping spot-1"></div>
+            <div class="ping spot-2"></div>
+            <div class="ping spot-3"></div>
+            <div class="ping spot-4"></div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Group X Final Project Proposal</p>
+        <p style="font-size: 0.9rem; margin-top: 10px;">資料來源：政府資料開放平台、Unsplash 模擬圖</p>
+    </footer>
+
+</body>
+</html>
