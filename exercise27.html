@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Web Page</title>
+  <style>
+    body {
+      background-color: #4faef0; 
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .container {
+      background-color: white;
+      width: 100%;
+      max-width: 800px;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .box {
+      border-radius: 4px;
+    }
+
+    .top-section {
+      background-color: #add136; 
+      height: 180px;               
+      margin-bottom: 15px;
+      width: 100%;
+    }
+
+    .middle-section {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .middle-section .box {
+      background-color: #01b4c9; 
+      height: 220px;               
+    }
+
+    .bottom-section {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .bottom-section .box {
+      background-color: #eaeaea; 
+      height: 100px;               
+    }
+
+    @media (max-width: 300px) {
+      
+      .top-section {
+        height: 120px;             
+      }
+
+      .middle-section {
+        grid-template-columns: 1fr;
+      }
+      
+      .middle-section .box {
+        height: 80px;              
+      }
+
+      .bottom-section {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .bottom-section .box {
+        height: 80px;              
+      }
+      
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="box top-section"></div>
+
+    <div class="middle-section">
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+    </div>
+
+    <div class="bottom-section">
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
+    </div>
+  </div>
+
+</body>
+</html>
