@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>CSS Image Styling</title>
+  <style>
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .img-left {
+      width: 33%;                 
+      height: 300px;               
+      border-radius: 18px;         
+      object-fit: cover;          
+    }
+
+    .img-middle {
+      width: 150px;                
+      height: 150px;              
+      border-radius: 50%;          
+      border: 1px solid black;     
+      object-fit: cover;           
+    }
+
+    .img-right {
+      width: 33%;                 
+      height: 300px;              
+      object-fit: fill;            
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <img src="https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?w=600&h=800&fit=crop" class="img-left" alt="Left Image">
+    
+    <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=300&fit=crop" class="img-middle" alt="Middle Image">
+    
+    <img src="https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?w=600&h=800&fit=crop" class="img-right" alt="Right Image">
+  </div>
+
+</body>
+</html>
