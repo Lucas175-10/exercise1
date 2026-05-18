@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+
+  <script>
+    var Person = {
+      firstName : "Tony",
+      lastName : "Lee",
+      age : 50,
+      eyeColor : "Blue"
+    };
+
+    var props = Object.keys(Person);
+    document.write("<p>Properties: " + props.join(", ") + "</p>");
+
+    delete Person.age;
+
+    document.write("<p>Object after deleting age:</p>");
+    document.write("<pre>" + JSON.stringify(Person, null, 2) + "</pre>");
+  </script>
+
+</body>
+</html>
